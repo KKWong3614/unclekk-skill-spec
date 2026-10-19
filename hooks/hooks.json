@@ -1,0 +1,31 @@
+{
+  "description": "unclekk-skill-spec 自动注入闸（事件驱动，报告优先）：Agent 写入/修改 SKILL.md 或 skills 目录下的 .md 时，写入前注入 13 条交付规范精简清单，写入后自动跑 spec_audit 输出审计报告。默认仅报告不阻断（避免误伤文档写作），显式开 --deny-on-error 才硬拦截。路径解析分层（CODEBUDDY_PLUGIN_ROOT → HERMES_PLUGIN_ROOT → 用户级 skills 文件系统回退），脚本缺失时 stderr 告警后 fail-open，绝不静默 no-op 导致规范失效。",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "matcher": "Write|Edit|MultiEdit",
+            "command": "python3 -c \"import os, sys, runpy\n_roots=[]\nfor k in ('CODEBUDDY_PLUGIN_ROOT','HERMES_PLUGIN_ROOT'):\n    v=os.environ.get(k)\n    if v: _roots.append(v)\n_cands=[]\n_sp=os.path.expanduser('~/.workbuddy/skills')\nfor d in (os.listdir(_sp) if os.path.isdir(_sp) else []):\n    _cands.append(os.path.join(_sp,d,'unclekk-skill-spec'))\n    _cands.append(os.path.join(_sp,d,'@user_48f048de','unclekk-skill-spec'))\n_s=''\nfor r in (_roots+_cands):\n    c=os.path.join(r,'scripts','spec_gate.py')\n    if os.path.isfile(c): _s=c; break\nif not _s:\n    sys.stderr.write('[skill-spec] WARN: gate script not located, THIS EVENT IS UNPROTECTED.')\n    sys.exit(0)\ntry:\n    sys.argv=[_s,'--mode','pre']\n    runpy.run_path(_s, run_name='__main__')\nexcept Exception as e:\n    sys.stderr.write('[skill-spec] gate error, fail-open: %s' % e)\n    sys.exit(0)\n\" || true",
+            "description": "写入前注入：命中 SKILL.md 或 skills 目录下的 .md 时，输出 systemMessage 注入 13 条规范精简清单（不阻断）",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "matcher": "Write|Edit|MultiEdit",
+            "command": "python3 -c \"import os, sys, runpy\n_roots=[]\nfor k in ('CODEBUDDY_PLUGIN_ROOT','HERMES_PLUGIN_ROOT'):\n    v=os.environ.get(k)\n    if v: _roots.append(v)\n_cands=[]\n_sp=os.path.expanduser('~/.workbuddy/skills')\nfor d in (os.listdir(_sp) if os.path.isdir(_sp) else []):\n    _cands.append(os.path.join(_sp,d,'unclekk-skill-spec'))\n    _cands.append(os.path.join(_sp,d,'@user_48f048de','unclekk-skill-spec'))\n_s=''\nfor r in (_roots+_cands):\n    c=os.path.join(r,'scripts','spec_gate.py')\n    if os.path.isfile(c): _s=c; break\nif not _s:\n    sys.stderr.write('[skill-spec] WARN: gate script not located, THIS EVENT IS UNPROTECTED.')\n    sys.exit(0)\ntry:\n    sys.argv=[_s,'--mode','post']\n    runpy.run_path(_s, run_name='__main__')\nexcept Exception as e:\n    sys.stderr.write('[skill-spec] gate error, fail-open: %s' % e)\n    sys.exit(0)\n\" || true",
+            "description": "写入后审计：SKILL.md 落盘即自动跑 spec_audit，输出审计报告 systemMessage（默认仅报告）",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

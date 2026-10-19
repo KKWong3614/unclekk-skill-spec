@@ -1,0 +1,40 @@
+{
+  "name": "unclekk-skill-spec",
+  "version": "1.1.0",
+  "description": "UncleKK Skill Spec - 14-point delivery standard for Agent skills, auto-injected via hooks and machine-audited by script (not just prose).",
+  "main": "scripts/spec_audit.py",
+  "scripts": {
+    "test": "python3 scripts/selftest.py",
+    "lint": "python3 -m py_compile scripts/*.py",
+    "audit": "python3 scripts/spec_audit.py --path .",
+    "verify": "python3 scripts/selftest.py",
+    "selftest": "python3 scripts/selftest.py"
+  },
+  "keywords": [
+    "skill-spec",
+    "skill-standards",
+    "audit",
+    "hook",
+    "auto-trigger",
+    "fail-open",
+    "beginner-friendly",
+    "bilingual",
+    "unclekk"
+  ],
+  "author": "unclekk",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "python": ">=3.8",
+  "url": {
+    "repository": "https://github.com/unclekk/unclekk-skill-spec",
+    "issues": "https://github.com/unclekk/unclekk-skill-spec/issues"
+  },
+  "skills": {
+    "triggers": ["skill spec", "skill standard", "skill audit", "skill 规范", "skill 自检"],
+    "hooks": {
+      "PreToolUse": ["spec_gate"],
+      "PostToolUse": ["spec_gate"]
+    }
+  }
+}
