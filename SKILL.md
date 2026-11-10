@@ -2,7 +2,7 @@
 slug: unclekk-skill-spec
 name: unclekk-skill-spec
 displayName: UncleKK 技能交付规范 14 条（自动注入+硬校验） | UncleKK Skill Spec (14 Rules, Auto-Injected & Machine-Audited)
-version: 1.1.0
+version: 1.1.1
 summary: >-
   把「新建/修改 skill 必须满足的 14 条规范」做成 hook 自动注入 + 脚本硬校验，而不是靠人记得。写 SKILL.md 时自动提醒，落盘后自动出审计报告。 | Encodes KK's 14 skill delivery rules as a hook that auto-injects on write plus a script that audits on save — rules that enforce themselves instead of relying on memory.
 description: >-
