@@ -1,6 +1,6 @@
 {
   "name": "unclekk-skill-spec",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "UncleKK Skill Spec - 14-point delivery standard for Agent skills, auto-injected via hooks and machine-audited by script (not just prose).",
   "main": "scripts/spec_audit.py",
   "scripts": {
